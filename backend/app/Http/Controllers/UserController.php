@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\http\Requests\UserStoreRequest;
+use PhpParser\Node\Stmt\Return_;
 
 class UserController extends Controller
 {
@@ -39,5 +41,31 @@ class UserController extends Controller
             ],
             200,
         );
+    }
+
+    public function store(UserStoreRequest $request)
+    {
+        try {
+            // Create new user
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+            return response()->json(
+                [
+                    'message' => 'User successfully created.',
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            // Return Json Response
+            return response()->json(
+                [
+                    'message' => 'Something went really wrong!',
+                ],
+                500,
+            );
+        }
     }
 }
