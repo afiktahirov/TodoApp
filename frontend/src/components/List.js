@@ -1,21 +1,57 @@
-import React, {  } from "react";
+import React, {useEffect,useState} from "react";
+import axios from 'axios';
+
+
 
 const List = () => {
-    return(
-        <div className="container">
-            <h3>User Detail</h3>
-            <table className="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    )
+
+
+const [userData,setUserData] = useState([]);
+
+useEffect(()=>{
+fetchData();
+},[]);
+const fetchData = async()=>{
+try{
+const result = await axios("http://127.0.0.1:8000/api/users");
+// console.log(result.data.results);
+setUserData(result.data.results);
+}catch(err){
+console.log("somthing wrong");
+}
+
+}
+return(
+<div className="container">
+    <h3>User Detail</h3>
+    <table className="table table-bordered">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {
+            userData.map((user,i)=>{
+            return(
+            <tr key={i}>
+                <td>{i+1}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                    add edit delete
+                </td>
+            </tr>
+            )
+            })
+            }
+        </tbody>
+    </table>
+</div>
+)
 }
 
 export default List;
