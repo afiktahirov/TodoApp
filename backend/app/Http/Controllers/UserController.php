@@ -68,4 +68,65 @@ class UserController extends Controller
             );
         }
     }
+
+    public function update(UserStoreRequest $request, $id)
+    {
+        try {
+            // Find User
+            $users = User::find($id);
+            if (!$users) {
+                return response()->json(
+                    [
+                        'message' => 'User Not Found.',
+                    ],
+                    404,
+                );
+            }
+            $users->name = $request->name;
+            $users->email = $request->email;
+            $users->password = $request->password;
+
+            // Updated User
+            $users->save();
+
+            return response()->json(
+                [
+                    'message' => 'User successfully updated.',
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            // Return Json Response
+            return response()->json(
+                [
+                    'message' => 'Something went really wrong!',
+                ],
+                500,
+            );
+        }
+    }
+    public function destroy($id)
+    {
+        // Detail
+        $users = User::find($id);
+        if (!$users) {
+            return response()->json(
+                [
+                    'message' => 'User Not Found.',
+                ],
+                404,
+            );
+        }
+
+        // Delete User
+        $users->delete();
+
+        // Return Json Response
+        return response()->json(
+            [
+                'message' => 'User successfully deleted.',
+            ],
+            200,
+        );
+    }
 }
